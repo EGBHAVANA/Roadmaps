@@ -8,6 +8,9 @@ import Ai from "./components/AiTutor.jsx";
 import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
 import Home from "./components/Home.jsx";
+import Frontend from "./components/frontend/Frontend.jsx";
+import Backend  from "./components/backend/Backend.jsx";
+import Devops from './components/devops/Devops.jsx'; 
 
 function App() {
 
@@ -21,6 +24,9 @@ function App() {
         <Route path='/teams' element = {<Teams />} />
         <Route path='/login' element = {<Login />} />
         <Route path='/signup' element = {<Signup />} />
+        <Route path="/frontend" element={<Frontend />} />
+        <Route path="/backend" element={<Backend />} />
+        <Route path="/devops" element={<Devops />} />  
       </Routes>
     </>
   )
