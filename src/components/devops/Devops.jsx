@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState ,useMemo } from 'react';
 import ReactFlow, {
   Background,
   Controls,
@@ -31,28 +31,35 @@ export default function DevOps() {
   const existingWidth = node.style?.width;
   const styleBase = isParent ? parentNodeStyleProps : baseNodeStyleProps;
 
-  const style = {
-    ...styleBase,
-    ...(existingWidth && { width: existingWidth }),
-    backgroundColor: isSelected
-      ? isParent
-        ? '#facc15' // darker yellow for parent
-        : '#60a5fa' // brighter blue for child
-      : styleBase.backgroundColor,
-    transition: 'all 0.2s ease-in-out',
-  };
+ const styledNodes = useMemo(() => {
+  return nodes.map((node) => {
+    const isTransparent = node.style?.backgroundColor === 'transparent';
+    const isDashed = node.style?.border?.includes('dashed');
+    if (node.positionAbsolute || isDashed || isTransparent) return node;
 
-  const className = isParent
-    ? 'hover:scale-[1.02] transition-transform duration-150'
-    : 'hover:scale-[1.02] hover:bg-blue-100 transition-all duration-150';
+    const isParent = node.style?.backgroundColor === '#fde68a';
+    const isSelected = selectedNode?.id === node.id;
+    const existingWidth = node.style?.width;
+    const styleBase = isParent ? parentNodeStyleProps : baseNodeStyleProps;
 
-  return {
-    ...node,
-    style,
-    className,
-  };
-});
+    const style = {
+      ...styleBase,
+      ...(existingWidth && { width: existingWidth }),
+      backgroundColor: isSelected
+        ? isParent
+          ? '#facc15'
+          : '#60a5fa'
+        : styleBase.backgroundColor,
+      transition: 'all 0.2s ease-in-out',
+    };
 
+    const className = isParent
+      ? 'hover:scale-[1.02] transition-transform duration-150'
+      : 'hover:scale-[1.02] hover:bg-blue-100 transition-all duration-150';
+
+    return { ...node, style, className };
+  });
+}, [nodes, selectedNode]);
 
 
   useEffect(() => {
@@ -61,13 +68,7 @@ export default function DevOps() {
     }
   }, []);
 
-  useEffect(() => {
-    setNodes(initialNodes);
-  }, [initialNodes]);
-
-  useEffect(() => {
-    setEdges(initialEdges);
-  }, [initialEdges]);
+ 
 
   const onConnect = useCallback(
     (connection) => setEdges((eds) => addEdge({ ...connection, type: 'smoothstep' }, eds)),
