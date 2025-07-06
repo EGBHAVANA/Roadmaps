@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Hide React Flow handle dots, but preserve edge anchors */
+.react-flow__handle {
+  width: 0px !important;
+  height: 0px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+
